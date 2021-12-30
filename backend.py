@@ -78,12 +78,13 @@ def check(flag):
   fault = []
   for m in library:
     date = m[5][2]
-    print(today,date)
-    if date>today:
-      fine = m[5][3]
-      fine = today-date
-      fine=int(fine.days)*5
-      fault.append(m)
+    #print(today,date)
+    if type(date) is not bool:
+      if date>today:
+        fine = m[5][3]
+        fine = today-date
+        fine=int(fine.days)*5
+        fault.append(m)
   if flag == True:
     for wr in fault:
       print(wr[1],"borrowed by",wr[5][0],"and has to pay",str(50+fine))
@@ -113,4 +114,23 @@ while True:
     change_com(mep)
   elif op == 6:
     break
+  """
+  Caution:
+  Code 198 is made for Develepors for testing the Software
+  and demo Please disable this feature for production
+  """
+  elif op == 198:
+    print("Warning: Entering into Developer Mode.\n This is to change current date\n This is made only for Testing.")
+    p = []
+    qus = ("Year","Month","Day")
+    for q in qus:
+      query = ""
+      defi = "Enter New",q,":"
+      for de in defi:
+        query+=de+" "
+      epo = int(input(query))
+      p.append(epo)
+    # Creating Future today
+    today = datetime(p[0],p[1],p[2])
+    print("Entering Future. Assume that day is",today)
   print("------------------------------------")
