@@ -25,21 +25,23 @@ def sortByRatings(lib):
       if a1 > a2 :
         lib[j], lib[j+1] = lib[j+1], lib[j]
               
-#ToDo: Fix display (Done @ 80%)
 def display(set,flag): # helps to portrait the results
   #book=[id,name,author,cateogory,arrival[borrower,cdate,rdate,fine]]
-  if flag == False:
+  if flag == False:       
     print("id\tname\tauthor\tcateogory\tarrival\tRatings")
     i = 0
     for book in set:
-      semic=book[-1]
-      semic=sum(semic)/len(semic)
       for det in book:
         print(det,end="\t")
-        i+=1
-        if i==6:
+      rate = book[-1]
+      if rate == "NR":
+        pass
+      else:
+        fin = sum(rate)/len(rate)
+        print(fin)
+        if i == 4:
           break
-        print(semic)
+        i+=1
       print()
   elif flag == True:
     print("id\tname\tauthor\tcateogory\tarrival\tborrow\tDate\tReturn\tFine")
@@ -62,7 +64,7 @@ def entry(): # Automated Entry System
       print("Sorry, but the id is already entered")
       id=(input("Enter New id:"))
   adate=today
-  ratings=[] # fix rating system
+  ratings="NR"
   book=[id,name,auth,cat,adate,[False,False,False,False],ratings]
   library.append(book)
   print("Added",str(len(library))+"th book",library[-1][1])
@@ -103,10 +105,15 @@ def change_com(id_r,flag,stat): # stat: 0 unsold ; 1 sold
     print("{} has borrowed {} should return at {}".format(book_r[5][0],book_r[1],book_r[5][2]))
   else:
     det = book_r[5]
-    print("{} has returned {} at {} and payed{}".format(book_r[5][0],book_r[1],today,flag))
-    for x in det:
-      x=False 
-
+    print("{} has returned {} at {} and payed Rs.{}".format(book_r[5][0],book_r[1],today,flag))
+    m = len(det)
+    klr=[]
+    for i in range(m):
+      x= False
+      klr.append(x)
+    print(klr)
+    book_r[5]= klr
+    
 def check(flag):
   fault = []
   for m in library:
@@ -116,11 +123,22 @@ def check(flag):
       if date>today:
         fine = m[5][3]
         fine = today-date
+        print(fine,today,date)
         fine=int(fine.days)*5
+        print(fine)
         fault.append(m)
   if flag == True:
     for wr in fault:
       print(wr[1],"borrowed by",wr[5][0],"and has to pay",str(50+fine))
+  else:
+    book_r=m
+    det = book_r[5]
+    print("{} has returned {} at {} and payed{}".format(book_r[5][0],book_r[1],today,flag))
+    print(det)
+    for x in det:
+      x=False
+    print(det)
+      
 
 def checkout(id_pay):
   check(False) # Update Fine
@@ -128,13 +146,16 @@ def checkout(id_pay):
   for i in m:
     pass
   for j in i:
-    print(j)
+    print("",end="")
   date = j[5][2]
-  #print(fine)
-  fine = today-date
-  fine=fine.days*5
-  j[5][3]=fine
-  change_com(id_pay,fine,1)
+  if today>date:
+    fine = today-date
+    fine=fine.days*5
+    j[5][3]=fine
+  else:
+    fine = 0
+  amount = 50+fine
+  change_com(id_pay,amount,1)
   rater=int(input("How much would you rate this book for 5:"))
   while True:
     if rater<=5:
@@ -142,16 +163,18 @@ def checkout(id_pay):
       break
     else:
       print("Sorry, Enter value than 5")
-      rater=int(input("How much would you rate this book for 5"))
-    rate_fi=m[6]
-    rate_fi.append()
+      rater=int(input("How much would you rate this book for 5:"))
+    rate_fi=m[-1]
+    if rate_fi == "NR":
+      rate_fi = []
+    rate_fi.append(rater)
   print("Thank you for borrowing books from us. Hope you visit us next time.")
 
 #--------------------------------------------------------------------------------------------------------
 menu="1 for Entering Books \n2 for search \n3 for cashier system \n4 for Checking Fine \n5 for Bill display \n6 for end"
 while True:
   print(menu)
-  op = int(input("Enter choice"))
+  op = int(input("Enter choice: "))
   if op == 1:
     entry()
   elif op == 2:
@@ -166,23 +189,18 @@ while True:
     checkout(mep)
   elif op == 6:
     break
-  """
-  Caution:
-  Code 198 is made for Develepors for testing the Software
-  and demo Please disable this feature for production
-  """
-  # elif op == 198:
-  #   print("Warning: Entering into Developer Mode.\n This is to change current date\n This is made only for Testing.")
-  #   p = []
-  #   qus = ("Year","Month","Day")
-  #   for q in qus:
-  #     query = ""
-  #     defi = "Enter New",q,":"
-  #     for de in defi:
-  #       query+=de+" "
-  #     epo = int(input(query))
-  #     p.append(epo)
-  #   # Creating Future today
-  #   today = datetime(p[0],p[1],p[2])
-  #   print("Entering Future. Assume that day is",today)
-  # print("------------------------------------")
+  elif op == 198:
+    print("Warning: Entering into Developer Mode.\n This is to change current date\n This is made only for Testing.")
+    p = []
+    qus = ("Year","Month","Day")
+    for q in qus:
+      query = ""
+      defi = "Enter New",q,":"
+      for de in defi:
+        query+=de+" "
+      epo = int(input(query))
+      p.append(epo)
+    # Creating Future today
+    today = datetime(p[0],p[1],p[2])
+    print("Entering Future. Assume that day is",today)
+  print("------------------------------------")
